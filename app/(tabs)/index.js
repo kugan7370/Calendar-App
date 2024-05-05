@@ -7,16 +7,17 @@ import {
  
 } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { useNavigation } from "@react-navigation/native";
 
 
 export default function CalenderScreen() {
- 
+ const navigation = useNavigation();
 
   return (
     <SafeAreaView style={styles.container}>
       <Calendar
         selected={new Date()}
-        // onDayPress={(day) => openModal(day.dateString)}
+        onDayPress={() => navigation.navigate("event")}
         markedDates={{
           "2024-05-23": { marked: true, dotColor: "red", },
           "2024-05-24": { marked: true ,dotColor: "red",},

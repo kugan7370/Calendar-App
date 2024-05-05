@@ -14,12 +14,17 @@ import { Agenda } from "react-native-calendars";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "../../components/useNotification";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import {  RFValue } from "react-native-responsive-fontsize";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
-    shouldSetBadge: true,
+    shouldSetBadge: false,
   }),
 });
 
@@ -119,8 +124,18 @@ export default function EventScreen() {
       setNotificationTime = new Date(eventDetails.notificationTime);
     }
 
-    
-    setEventsData({ ...eventDetails, notificationTime: setNotificationTime });
+    // update event with selcected date
+    const updatedEventsData = { ...eventsData };
+    if (updatedEventsData[selectedDate]) {
+      updatedEventsData[selectedDate].push(eventDetails);
+    }
+    else {
+      updatedEventsData[selectedDate] = [eventDetails];
+    }
+    setEventsData(updatedEventsData);
+
+
+  
     closeModal();
 
    
@@ -134,9 +149,9 @@ export default function EventScreen() {
       // Schedule the notification
       const schedulingOptions = {
         content: {
-          title: "Event Notification",
-          body: eventDetails.title,
-          sound: "./level-up-191997.mp3",
+          title:eventDetails.title,
+          body: eventDetails.note ? eventDetails.note : "You have an event coming up!" ,
+          sound: "default",
         },
         trigger: { date: setNotificationTime },
       };
@@ -195,6 +210,7 @@ export default function EventScreen() {
     setNotificationModalVisible(false);
   };
 
+ 
   return (
     <SafeAreaView style={styles.container}>
       <Agenda
@@ -202,7 +218,7 @@ export default function EventScreen() {
         selected={new Date()}
         onDayPress={(day) => openModal(day.dateString)}
         renderItem={(item, firstItemInDay) => (
-          <TouchableOpacity onLongPress={() => removeEvent(item.id)}>
+          <TouchableOpacity>
             <View style={styles.event}>
               <Text style={styles.eventTitle}>{item.title}</Text>
               <Text
@@ -294,20 +310,20 @@ export default function EventScreen() {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Select Notification Time</Text>
-            <TouchableOpacity
+            <TouchableOpacity style={styles.optionButton}
               onPress={() => handleNotificationOption("15 minutes before")}
             >
-              <Text>15 minutes before</Text>
+              <Text style={styles.optionText}>15 minutes before</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            <TouchableOpacity style={styles.optionButton}
               onPress={() => handleNotificationOption("1 hour before")}
             >
-              <Text>1 hour before</Text>
+              <Text style={styles.optionText}>1 hour before</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            <TouchableOpacity style={styles.optionButton}
               onPress={() => handleNotificationOption("1 day before")}
             >
-              <Text>1 day before</Text>
+              <Text style={styles.optionText}>1 day before</Text>
             </TouchableOpacity>
             <DateTimePickerModal
               isVisible={isNotificationDateTimePickerVisible}
@@ -315,10 +331,10 @@ export default function EventScreen() {
               onConfirm={handleNotificationDateTimeConfirm}
               onCancel={() => setIsNotificationDateTimePickerVisible(false)}
             />
-            <TouchableOpacity
+            <TouchableOpacity style={styles.optionButton}
               onPress={() => setIsNotificationDateTimePickerVisible(true)}
             >
-              <Text>Select Specific Date & Time</Text>
+              <Text style={styles.optionText}>Select Specific Date & Time</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -344,9 +360,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
+    width: wp("80%"),
+    height: hp("60%"),
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: wp("8%"),
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -358,9 +376,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: RFValue(18),
+   textAlign: "center",
     marginBottom: 20,
+    fontFamily: "PoppinsMedium",
   },
   input: {
     height: 40,
@@ -370,6 +389,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
+    fontFamily: "PoppinsRegular",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -387,9 +407,23 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    fontFamily: "PoppinsRegular",
   },
   eventTime: {
     fontSize: 14,
     color: "gray",
+    fontFamily: "PoppinsRegular",
+  },
+  optionButton: {
+    backgroundColor: "#0788ff",
+   width: wp("60%"),
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  optionText: {
+    color: "white",
+    textAlign: "center",
+    fontFamily: "PoppinsRegular",
   },
 });

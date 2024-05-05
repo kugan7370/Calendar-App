@@ -1,11 +1,11 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import Colors from '../../constants/Colors';
 import { useColorScheme } from '../../components/useColorScheme';
 import { useClientOnlyValue } from '../../components/useClientOnlyValue';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props) {
@@ -27,14 +27,26 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Calendar',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <AntDesign
+              name="calendar"
+              size={24}
+              color={focused ? "red" : "white"}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="event"
         options={{
           title: 'Event',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <FontAwesome
+              name="calendar-plus-o"
+              size={24}
+              color={focused ? "red" : "white"}
+            />
+          ),
         }}
       />
     </Tabs>
