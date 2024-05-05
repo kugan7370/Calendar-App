@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "template_js",
-    "slug": "template_js",
+    "name": "event-app",
+    "slug": "event-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "author": "Talbert Herndon",
+    "author": "Kugapriyan",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kugan_priyan.eventapp"
     },
     "web": {
       "bundler": "metro",
